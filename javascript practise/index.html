@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Compiler</title>
+    <!-- Include CSS framework/library -->
+    <!-- Include JavaScript libraries like jQuery if needed -->
+</head>
+<body>
+    <h1>Web Compiler</h1>
+    <label for="language">Select Language:</label>
+    <select id="language">
+        <option value="Solidity">Solidity</option>
+        <option value="Rust">Rust</option>
+        <option value="Motoko">Motoko</option>
+    </select>
+    <br>
+    <label for="difficulty">Select Difficulty:</label>
+    <select id="difficulty">
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+    </select>
+    <br>
+    <textarea id="code" rows="10" cols="50"></textarea>
+    <br>
+    <button onclick="compileCode()">Compile</button>
+    <div id="output"></div>
+
+    <script>
+        function compileCode() {
+            const language = document.getElementById('language').value;
+            const difficulty = document.getElementById('difficulty').value;
+            const code = document.getElementById('code').value;
+
+            fetch('/compile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    language: language,
+                    difficulty: difficulty,
+                    code: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const outputDiv = document.getElementById('output');
+                if (data.success) {
+                    outputDiv.innerText = 'Compilation Successful!';
+                } else {
+                    outputDiv.innerText = 'Compilation Failed!';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
